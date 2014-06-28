@@ -129,6 +129,6 @@ def _flex_complete(text, start, end):
     _lib.rl_completion_suppress_append = 0
     state.begidx = start
     state.endidx = end
-    return _lib.rl_completion_matches(text, _on_completion);
+    return _lib.rl_completion_matches(text, _on_completion)
 
 _lib.rl_attempted_completion_function = _flex_complete
