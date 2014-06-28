@@ -17,8 +17,9 @@ void add_history(const char*);
 void clear_history();
 int rl_insert_text(const char*);
 void rl_redisplay();
-char *strdup(const char*);
 char **rl_completion_matches(const char*, rl_compentry_func_t*);
+char *strdup(const char*);
+void free(void*);
 
 
 extern int py_history_length;
@@ -31,3 +32,4 @@ int py_replace_history_item(int pos, const char *line);
 const char *py_get_history_item(int i);
 int py_get_history_length();
 void py_setup_readline();
+char *py_call_readline(FILE *sys_stdin, FILE *sys_stdout, const char *prompt);

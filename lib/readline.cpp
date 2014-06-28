@@ -1,4 +1,5 @@
 #include "pyreadline.h"
+#include <sys/select.h>
 
 PYREADLINE_EXPORT int py_history_length = -1;
 
@@ -128,4 +129,86 @@ py_setup_readline()
 
     /* Initialize (allows .inputrc to override) */
     rl_initialize();
+}
+
+static char *completed_input_string;
+static void
+rlhandler(char *text)
+{
+    completed_input_string = text;
+    rl_callback_handler_remove();
+}
+
+static char*
+readline_until_enter_or_signal(const char *prompt, int *signal)
+{
+    char not_done_reading = '\0';
+    fd_set selectset;
+
+    *signal = 0;
+    rl_catch_signals = 0;
+
+    rl_callback_handler_install(prompt, rlhandler);
+    FD_ZERO(&selectset);
+
+    for (completed_input_string = &not_done_reading;
+         completed_input_string == &not_done_reading;) {
+        int has_input = 0;
+        while (!has_input) {
+            FD_SET(fileno(rl_instream), &selectset);
+            /* select resets selectset if no input was available */
+            has_input = select(fileno(rl_instream) + 1, &selectset,
+                               nullptr, nullptr, nullptr);
+        }
+
+        if (has_input > 0) {
+            rl_callback_read_char();
+        } else if (errno == EINTR) {
+            rl_free_line_state();
+            rl_cleanup_after_signal();
+            rl_callback_handler_remove();
+            *signal = 1;
+            completed_input_string = nullptr;
+        }
+    }
+
+    return completed_input_string;
+}
+
+PYREADLINE_EXPORT char*
+py_call_readline(FILE *sys_stdin, FILE *sys_stdout, const char *prompt)
+{
+    locale_saver saver();
+
+    if (sys_stdin != rl_instream || sys_stdout != rl_outstream) {
+        rl_instream = sys_stdin;
+        rl_outstream = sys_stdout;
+        rl_prep_terminal(1);
+    }
+
+    int signal;
+    char *p = readline_until_enter_or_signal(prompt, &signal);
+    /* we got an interrupt signal */
+    if (signal) {
+        return nullptr;
+    }
+
+    /* We got an EOF, return a empty string. */
+    if (!p) {
+        return strdup("");
+    }
+
+    /* we have a valid line */
+    size_t n = strlen(p);
+    if (n > 0) {
+        int length = py_get_history_length();
+        if (length <= 0 || strcmp(p, history_get(length)->line)) {
+            add_history(p);
+        }
+    }
+
+    p = (char*)realloc(p, n + 2);
+    p[n] = '\n';
+    p[n + 1] = '\0';
+    return p;
 }

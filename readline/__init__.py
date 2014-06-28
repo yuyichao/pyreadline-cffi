@@ -8,6 +8,7 @@ Importing this module enables command line editing using GNU readline.
 from ._cffi import (_ffi, _lib, _to_cstr, _to_cstr_null,
                     _handle_ioerr, _ffi_pystr)
 from .state import state as _state
+from .wrapper import _create_wrapper
 
 _lib.py_setup_readline()
 
@@ -186,3 +187,5 @@ def redisplay():
     Change what's displayed on the screen to reflect the current
     contents of the line buffer."""
     _lib.rl_redisplay()
+
+_wrapper = _create_wrapper()
