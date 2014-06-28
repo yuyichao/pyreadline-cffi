@@ -86,3 +86,13 @@ remove_history_item(int pos)
     }
     return 0;
 }
+
+PYREADLINE_EXPORT int
+replace_history_item(int pos, const char *line)
+{
+    if (HIST_ENTRY *old_entry = replace_history_entry(pos, line, nullptr)) {
+        _free_history_entry(old_entry);
+        return 1;
+    }
+    return 0;
+}

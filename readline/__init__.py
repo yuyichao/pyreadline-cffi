@@ -102,3 +102,13 @@ def remove_history_item(pos):
         raise ValueError("History index cannot be negative")
     if not _lib.remove_history_item(pos):
         raise ValueError("No history item at position %d" % pos)
+
+
+def replace_history_item(pos, line):
+    """replace_history_item(pos, line) -> None
+    replaces history item given by its position with contents of line"""
+    pos = int(pos)
+    if pos < 0:
+        raise ValueError("History index cannot be negative")
+    if not _lib.replace_history_item(pos, _to_cstr(line)):
+        raise ValueError("No history item at position %d" % pos)

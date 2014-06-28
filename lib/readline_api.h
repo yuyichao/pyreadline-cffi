@@ -13,3 +13,4 @@ int write_history_file(const char *s);
 void set_py_funcs(void (*)(void*));
 void set_completer_delims(const char *s);
 int remove_history_item(int pos);
+int replace_history_item(int pos, const char *line);
