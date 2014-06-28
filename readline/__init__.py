@@ -71,3 +71,17 @@ def get_completion_type():
     """get_completion_type() -> int
     Get the type of completion being attempted."""
     return _lib.rl_completion_type
+
+
+# Get the beginning index for the scope of the tab-completion
+def get_begidx():
+    """get_begidx() -> int
+    get the beginning index of the readline tab-completion scope"""
+    return _state.begidx
+
+
+# Get the ending index for the scope of the tab-completion
+def get_endidx():
+    """get_endidx() -> int
+    get the ending index of the readline tab-completion scope"""
+    _state.endidx
