@@ -154,3 +154,10 @@ def get_current_history_length():
     """get_current_history_length() -> integer
     return the current (not the maximum) length of history."""
     return _lib.get_history_length()
+
+
+# Exported function to read the current line buffer
+def get_line_buffer():
+    """get_line_buffer() -> string
+    return the current contents of the line buffer."""
+    return _ffi_pystr(_lib.rl_line_buffer)
