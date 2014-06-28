@@ -121,8 +121,8 @@ setup_readline()
     /* Force rebind of TAB to insert-tab */
     rl_bind_key('\t', rl_insert);
     /* Bind both ESC-TAB and ESC-ESC to the completion function */
-    rl_bind_key_in_map ('\t', rl_complete, emacs_meta_keymap);
-    rl_bind_key_in_map ('\033', rl_complete, emacs_meta_keymap);
+    rl_bind_key_in_map('\t', rl_complete, emacs_meta_keymap);
+    rl_bind_key_in_map('\033', rl_complete, emacs_meta_keymap);
     /* Set Python word break characters */
     rl_completer_word_break_characters = &completer_word_break_characters[0];
 

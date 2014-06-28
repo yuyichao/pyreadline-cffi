@@ -5,7 +5,8 @@
 Importing this module enables command line editing using GNU readline.
 """
 
-from ._cffi import _ffi, _lib, _to_cstr, _to_cstr_null, _handle_ioerr
+from ._cffi import (_ffi, _lib, _to_cstr, _to_cstr_null,
+                    _handle_ioerr, _ffi_pystr)
 from .state import state as _state
 
 _lib.setup_readline()

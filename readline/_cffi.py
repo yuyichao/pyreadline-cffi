@@ -6,6 +6,8 @@ from cffi import FFI
 import os
 from os import path as _path
 
+_ffi = FFI()
+
 try:
     # 2to3 friendly
     _unicode = eval('unicode')
@@ -22,7 +24,6 @@ else:
     except:
         _bytes = str
 
-_ffi = FFI()
 _ffi.cdef("""
 /* Bindable functions */
 typedef int rl_command_func_t(int, int);
