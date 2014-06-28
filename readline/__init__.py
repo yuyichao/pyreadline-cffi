@@ -161,3 +161,10 @@ def get_line_buffer():
     """get_line_buffer() -> string
     return the current contents of the line buffer."""
     return _ffi_pystr(_lib.rl_line_buffer)
+
+
+# Exported function to clear the current history
+def clear_history():
+    """clear_history() -> None
+    Clear the current readline history."""
+    _lib.clear_history()

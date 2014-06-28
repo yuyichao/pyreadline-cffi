@@ -19,3 +19,4 @@ int replace_history_item(int pos, const char *line);
 void add_history(const char*);
 const char *get_history_item(int i);
 int get_history_length();
+void clear_history();
