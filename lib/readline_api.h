@@ -8,6 +8,9 @@ extern int rl_completion_type;
 extern char *rl_completer_word_break_characters;
 extern char *rl_line_buffer;
 extern int rl_attempted_completion_over;
+extern int rl_completion_append_character;
+extern int rl_completion_suppress_append;
+extern rl_completion_func_t *rl_attempted_completion_function;
 
 void parse_and_bind(const char *s);
 int rl_read_init_file(const char*);
@@ -24,3 +27,4 @@ void clear_history();
 int rl_insert_text(const char*);
 void rl_redisplay();
 char *strdup(const char*);
+char **rl_completion_matches(const char*, rl_compentry_func_t*);
