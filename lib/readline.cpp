@@ -1,8 +1,5 @@
 #include "pyreadline.h"
 
-#include <readline/readline.h>
-#include <readline/history.h>
-
 PYREADLINE_EXPORT int history_length = -1;
 
 class locale_saver {

@@ -1,6 +1,10 @@
 # Copyright (C) 2014~2014 by Yichao Yu
 # yyc1992@gmail.com
 
+"""
+Importing this module enables command line editing using GNU readline.
+"""
+
 from ._cffi import _ffi, _lib, _to_cstr, _to_cstr_null, _handle_ioerr
 from .state import state as _state
 
@@ -55,4 +59,8 @@ def get_history_length():
     the history file."""
     return _lib.history_length
 
-set_completion_display_matches_hook = _state.set_completion_display_matches_hook
+# Exported functions to specify hook functions in Python
+set_completion_display_matches_hook = \
+    _state.set_completion_display_matches_hook
+set_startup_hook = _state.set_startup_hook
+set_pre_input_hook = _state.set_pre_input_hook

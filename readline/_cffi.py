@@ -13,6 +13,7 @@ try:
 except:
     _unicode = str
     _bytes = bytes
+
     def _ffi_pystr(s):
         return _ffi.string(s).decode()
 else:
@@ -86,6 +87,7 @@ def _handle_ioerr(err):
         raise IOError(err, os.strerror(err))
 
 
+# Remove?
 @_ffi.callback('void(void*)')
 def _py_call(handle):
     try:
