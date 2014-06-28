@@ -9,8 +9,8 @@ extern char *rl_completer_word_break_characters;
 extern char *rl_line_buffer;
 
 void parse_and_bind(const char *s);
-int read_init_file(const char *s);
-int read_history_file(const char *s);
+int rl_read_init_file(const char*);
+int read_history(const char*);
 int write_history_file(const char *s);
 void set_py_funcs(void (*)(void*));
 void set_completer_delims(const char *s);

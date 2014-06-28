@@ -29,18 +29,6 @@ parse_and_bind(const char *s)
 }
 
 PYREADLINE_EXPORT int
-read_init_file(const char *s)
-{
-    return rl_read_init_file(s);
-}
-
-PYREADLINE_EXPORT int
-read_history_file(const char *s)
-{
-    return read_history(s);
-}
-
-PYREADLINE_EXPORT int
 write_history_file(const char *s)
 {
     int err = write_history(s);

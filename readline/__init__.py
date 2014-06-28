@@ -21,7 +21,7 @@ def read_init_file(filename=None):
     """read_init_file([filename]) -> None
     Parse a readline initialization file.
     The default filename is the last filename used."""
-    err = _lib.read_init_file(_to_cstr_null(filename))
+    err = _lib.rl_read_init_file(_to_cstr_null(filename))
     _handle_ioerr(err)
 
 
@@ -30,7 +30,7 @@ def read_history_file(filename=None):
     """read_history_file([filename]) -> None
     Load a readline history file.
     The default filename is ~/.history."""
-    err = _lib.read_history_file(_to_cstr_null(filename))
+    err = _lib.read_history(_to_cstr_null(filename))
     _handle_ioerr(err)
 
 
