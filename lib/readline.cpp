@@ -20,13 +20,6 @@ public:
 };
 
 #define completion_matches rl_completion_matches
-// static void on_completion_display_matches_hook(char **matches, int num_matches,
-//                                                int max_length);
-
-// Do not free the string in rl_completer_word_break_characters since
-// other libraries (e.g. R) might use statically allocated pointer.
-static std::string completer_word_break_characters =
-    " \t\n`~!@#$%^&*()-=+[{]}\\|;:'\",<>/?";
 
 PYREADLINE_EXPORT void
 parse_and_bind(const char *s)
@@ -55,4 +48,19 @@ write_history_file(const char *s)
         history_truncate_file(s, history_length);
     }
     return err;
+}
+
+// Do not free the string in rl_completer_word_break_characters since
+// other libraries (e.g. R) might use statically allocated pointer.
+static std::string completer_word_break_characters =
+    " \t\n`~!@#$%^&*()-=+[{]}\\|;:'\",<>/?";
+
+PYREADLINE_EXPORT void
+set_completer_delims(const char *s)
+{
+    /* Keep a reference to the allocated memory in the module state in case
+       some other module modifies rl_completer_word_break_characters
+       (see issue #17289). */
+    completer_word_break_characters = s;
+    rl_completer_word_break_characters = &completer_word_break_characters[0];
 }

@@ -84,4 +84,11 @@ def get_begidx():
 def get_endidx():
     """get_endidx() -> int
     get the ending index of the readline tab-completion scope"""
-    _state.endidx
+    return _state.endidx
+
+
+# Set the tab-completion word-delimiters that readline uses
+def set_completer_delims(string):
+    """set_completer_delims(string) -> None
+    set the readline word delimiters for tab-completion"""
+    _lib.set_completer_delims(_to_cstr(string))

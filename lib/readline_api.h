@@ -11,3 +11,4 @@ int read_init_file(const char *s);
 int read_history_file(const char *s);
 int write_history_file(const char *s);
 void set_py_funcs(void (*)(void*));
+void set_completer_delims(const char *s);
