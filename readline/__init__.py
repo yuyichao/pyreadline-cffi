@@ -9,14 +9,14 @@ from ._cffi import (_ffi, _lib, _to_cstr, _to_cstr_null,
                     _handle_ioerr, _ffi_pystr)
 from .state import state as _state
 
-_lib.setup_readline()
+_lib.py_setup_readline()
 
 
 # Exported function to send one line to readline's init file parser
 def parse_and_bind(s):
     """parse_and_bind(string) -> None
     Parse and execute single line of a readline init file."""
-    _lib.parse_and_bind(_to_cstr(s))
+    _lib.py_parse_and_bind(_to_cstr(s))
 
 
 # Exported function to parse a readline init file
@@ -42,7 +42,7 @@ def write_history_file(filename=None):
     """write_history_file([filename]) -> None
     Save a readline history file.
     The default filename is ~/.history."""
-    err = _lib.write_history_file(_to_cstr_null(filename))
+    err = _lib.py_write_history_file(_to_cstr_null(filename))
     _handle_ioerr(err)
 
 
@@ -52,7 +52,7 @@ def set_history_length(length):
     set the maximal number of items which will be written to
     the history file. A negative length is used to inhibit
     history truncation."""
-    _lib.history_length = length
+    _lib.py_history_length = length
 
 
 # Get history length
@@ -60,7 +60,7 @@ def get_history_length():
     """get_history_length() -> int
     return the maximum number of items that will be written to
     the history file."""
-    return _lib.history_length
+    return _lib.py_history_length
 
 # Exported functions to specify hook functions in Python
 set_completion_display_matches_hook = \
@@ -94,7 +94,7 @@ def get_endidx():
 def set_completer_delims(string):
     """set_completer_delims(string) -> None
     set the readline word delimiters for tab-completion"""
-    _lib.set_completer_delims(_to_cstr(string))
+    _lib.py_set_completer_delims(_to_cstr(string))
 
 
 def remove_history_item(pos):
@@ -103,7 +103,7 @@ def remove_history_item(pos):
     pos = int(pos)
     if pos < 0:
         raise ValueError("History index cannot be negative")
-    if not _lib.remove_history_item(pos):
+    if not _lib.py_remove_history_item(pos):
         raise ValueError("No history item at position %d" % pos)
 
 
@@ -113,7 +113,7 @@ def replace_history_item(pos, line):
     pos = int(pos)
     if pos < 0:
         raise ValueError("History index cannot be negative")
-    if not _lib.replace_history_item(pos, _to_cstr(line)):
+    if not _lib.py_replace_history_item(pos, _to_cstr(line)):
         raise ValueError("No history item at position %d" % pos)
 
 
@@ -148,7 +148,7 @@ def get_completer():
 def get_history_item(index):
     """get_history_item(index) -> string
     return the current contents of history item at index."""
-    cstr = _lib.get_history_item(index)
+    cstr = _lib.py_get_history_item(index)
     return None if cstr == _ffi.NULL else _ffi_pystr(cstr)
 
 
@@ -156,7 +156,7 @@ def get_history_item(index):
 def get_current_history_length():
     """get_current_history_length() -> integer
     return the current (not the maximum) length of history."""
-    return _lib.get_history_length()
+    return _lib.py_get_history_length()
 
 
 # Exported function to read the current line buffer

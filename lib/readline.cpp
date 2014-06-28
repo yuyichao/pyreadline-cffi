@@ -1,20 +1,20 @@
 #include "pyreadline.h"
 
-PYREADLINE_EXPORT int history_length = -1;
+PYREADLINE_EXPORT int py_history_length = -1;
 
 PYREADLINE_EXPORT void
-parse_and_bind(const char *s)
+py_parse_and_bind(const char *s)
 {
     std::string copy = s;
     rl_parse_and_bind(&copy[0]);
 }
 
 PYREADLINE_EXPORT int
-write_history_file(const char *s)
+py_write_history_file(const char *s)
 {
     int err = write_history(s);
-    if (!err && history_length >= 0) {
-        history_truncate_file(s, history_length);
+    if (!err && py_history_length >= 0) {
+        history_truncate_file(s, py_history_length);
     }
     return err;
 }
@@ -26,7 +26,7 @@ static std::string completer_word_break_characters =
     " \t\n`~!@#$%^&*()-=+[{]}\\|;:'\",<>/?";
 
 PYREADLINE_EXPORT void
-set_completer_delims(const char *s)
+py_set_completer_delims(const char *s)
 {
     /* Keep a reference to the allocated memory in the module state in case
        some other module modifies rl_completer_word_break_characters
@@ -48,7 +48,7 @@ _free_history_entry(HIST_ENTRY *entry)
 }
 
 PYREADLINE_EXPORT int
-remove_history_item(int pos)
+py_remove_history_item(int pos)
 {
     if (HIST_ENTRY *entry = remove_history(pos)) {
         _free_history_entry(entry);
@@ -58,7 +58,7 @@ remove_history_item(int pos)
 }
 
 PYREADLINE_EXPORT int
-replace_history_item(int pos, const char *line)
+py_replace_history_item(int pos, const char *line)
 {
     if (HIST_ENTRY *old_entry = replace_history_entry(pos, line, nullptr)) {
         _free_history_entry(old_entry);
@@ -68,7 +68,7 @@ replace_history_item(int pos, const char *line)
 }
 
 PYREADLINE_EXPORT const char*
-get_history_item(int idx)
+py_get_history_item(int idx)
 {
     if (HIST_ENTRY *hist_ent = history_get(idx)) {
         return hist_ent->line;
@@ -81,7 +81,7 @@ get_history_item(int idx)
  * to date. See issue #8065.*/
 
 PYREADLINE_EXPORT int
-get_history_length()
+py_get_history_length()
 {
     HISTORY_STATE *hist_st = history_get_history_state();
     int length = hist_st->length;
@@ -112,7 +112,7 @@ public:
 };
 
 PYREADLINE_EXPORT void
-setup_readline()
+py_setup_readline()
 {
     locale_saver saver();
 
