@@ -112,3 +112,10 @@ def replace_history_item(pos, line):
         raise ValueError("History index cannot be negative")
     if not _lib.replace_history_item(pos, _to_cstr(line)):
         raise ValueError("No history item at position %d" % pos)
+
+
+# Add a line to the history buffer
+def add_history(string):
+    """add_history(string) -> None
+    add a line to the history buffer"""
+    _lib.add_history(_to_cstr(string))
