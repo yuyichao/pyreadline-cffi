@@ -29,14 +29,10 @@ import sys
 import os
 from ._cffi import (_ffi, _lib, _to_cstr, _to_cstr_null, _ffi_pystr)
 
-try:
-    input = raw_input
-except:
-    pass
-
 
 class _PyPyWrapper(object):
     __slots__ = ('f_in', 'f_out')
+
     def __init__(self):
         self.f_in = _ffi.cast("FILE*", sys.stdin)
         self.f_out = _ffi.cast("FILE*", sys.stdout)
