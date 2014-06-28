@@ -2,20 +2,7 @@
 # yyc1992@gmail.com
 
 from ._cffi import _ffi, _lib, _to_cstr, _to_cstr_null, _handle_ioerr
-
-
-class _ReadlineState(object):
-    __slots__ = ('completion_display_matches_hook', 'startup_hook',
-                 'pre_input_hook', 'completer', 'begidx', 'endidx')
-    def _clear(self):
-        self.completion_display_matches_hook = None
-        self.startup_hook = None
-        self.pre_input_hook = None
-        self.completer = None
-        self.begidx = None
-        self.endidx = None
-
-_readline_state = _ReadlineState()
+from .state import state as _state
 
 
 # Exported function to send one line to readline's init file parser
@@ -67,3 +54,5 @@ def get_history_length():
     return the maximum number of items that will be written to
     the history file."""
     return _lib.history_length
+
+set_completion_display_matches_hook = _state.set_completion_display_matches_hook
