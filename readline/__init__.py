@@ -139,3 +139,18 @@ def get_completer():
     """get_completer() -> function\n
     Returns current completer function."""
     return _state.completer
+
+
+# Exported function to get any element of history
+def get_history_item(index):
+    """get_history_item(index) -> string
+    return the current contents of history item at index."""
+    cstr = _lib.get_history_item(index)
+    return None if cstr == _ffi.NULL else _ffi_pystr(cstr)
+
+
+# Exported function to get current length of history
+def get_current_history_length():
+    """get_current_history_length() -> integer
+    return the current (not the maximum) length of history."""
+    return _lib.get_history_length()

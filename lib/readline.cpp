@@ -96,3 +96,30 @@ replace_history_item(int pos, const char *line)
     }
     return 0;
 }
+
+PYREADLINE_EXPORT const char*
+get_history_item(int idx)
+{
+    if (HIST_ENTRY *hist_ent = history_get(idx)) {
+        return hist_ent->line;
+    }
+    return nullptr;
+}
+
+/* XXX It may be possible to replace this with a direct use of history_length
+ * instead, but it's not clear whether BSD's libedit keeps history_length up
+ * to date. See issue #8065.*/
+
+PYREADLINE_EXPORT int
+get_history_length()
+{
+    HISTORY_STATE *hist_st = history_get_history_state();
+    int length = hist_st->length;
+    /* the history docs don't say so, but the address of hist_st changes each
+       time history_get_history_state is called which makes me think it's
+       freshly malloc'd memory...  on the other hand, the address of the last
+       line stays the same as long as history isn't extended, so it appears to
+       be malloc'd but managed by the history package... */
+    free(hist_st);
+    return length;
+}
