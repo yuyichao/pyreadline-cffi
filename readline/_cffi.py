@@ -22,6 +22,48 @@ else:
         _bytes = str
 
 _ffi = FFI()
+_ffi.cdef("""
+/* Bindable functions */
+typedef int rl_command_func_t(int, int);
+
+/* Typedefs for the completion system */
+typedef char *rl_compentry_func_t(const char*, int);
+typedef char **rl_completion_func_t(const char*, int, int);
+
+typedef char *rl_quote_func_t(char*, int, char*);
+typedef char *rl_dequote_func_t(char*, int);
+
+typedef int rl_compignore_func_t(char**);
+
+typedef void rl_compdisp_func_t(char**, int, int);
+
+/* Type for input and pre-read hook functions like rl_event_hook */
+typedef int rl_hook_func_t(void);
+
+/* Input function type */
+typedef int rl_getc_func_t(FILE*);
+
+/* Generic function that takes a character buffer (which could be the readline
+   line buffer) and an index into it (which could be rl_point) and returns
+   an int. */
+typedef int rl_linebuf_func_t(char*, int);
+
+/* `Generic' function pointer typedefs */
+typedef int rl_intfunc_t(int);
+#define rl_ivoidfunc_t rl_hook_func_t
+typedef int rl_icpfunc_t(char*);
+typedef int rl_icppfunc_t(char**);
+
+typedef void rl_voidfunc_t(void);
+typedef void rl_vintfunc_t(int);
+typedef void rl_vcpfunc_t(char*);
+typedef void rl_vcppfunc_t(char**);
+
+typedef char *rl_cpvfunc_t(void);
+typedef char *rl_cpifunc_t(int);
+typedef char *rl_cpcpfunc_t(char*);
+typedef char *rl_cpcppfunc_t(char**);
+""")
 _basedir = _path.dirname(__file__)
 
 with open(_path.join(_basedir, 'readline_api.h')) as f:
