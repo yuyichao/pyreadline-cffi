@@ -1,22 +1,9 @@
-extern "C" {
-#include "readline_api.h"
-}
+#include "pyreadline.h"
 
-#include <string.h>
-#include <stdlib.h>
-#include <locale.h>
-#include <string>
-
-#define PYREADLINE_EXPORT __attribute__((visibility("default")))
-#define PYREADLINE_INLINE __attribute__((always_inline)) inline
-
-#ifdef HAVE_CONFIG_H
-#  undef HAVE_CONFIG_H /* Else readline/chardefs.h includes strings.h */
-#endif
 #include <readline/readline.h>
 #include <readline/history.h>
 
-int history_length = -1;
+PYREADLINE_EXPORT int history_length = -1;
 
 class locale_saver {
     char *m_saved_locale;
@@ -44,26 +31,26 @@ public:
 static std::string completer_word_break_characters =
     " \t\n`~!@#$%^&*()-=+[{]}\\|;:'\",<>/?";
 
-void
+PYREADLINE_EXPORT void
 parse_and_bind(const char *s)
 {
     std::string copy = s;
     rl_parse_and_bind(&copy[0]);
 }
 
-int
+PYREADLINE_EXPORT int
 read_init_file(const char *s)
 {
     return rl_read_init_file(s);
 }
 
-int
+PYREADLINE_EXPORT int
 read_history_file(const char *s)
 {
     return read_history(s);
 }
 
-int
+PYREADLINE_EXPORT int
 write_history_file(const char *s)
 {
     int err = write_history(s);
