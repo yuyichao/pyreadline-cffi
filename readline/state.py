@@ -61,6 +61,16 @@ class _ReadlineState(object):
             raise TypeError("set_pre_input_hook(func): argument not callable")
         self.pre_input_hook = function
 
+    def set_completer(self, function):
+        """set_completer([function]) -> None
+        Set or remove the completer function.
+        The function is called as function(text, state),
+        for state in 0, 1, 2, ..., until it returns a non-string.
+        It should return the next possible completion starting with 'text'."""
+        if function is not None and not callable(function):
+            raise TypeError("set_completer(func): argument not callable")
+        self.completer = function
+
 state = _ReadlineState()
 
 

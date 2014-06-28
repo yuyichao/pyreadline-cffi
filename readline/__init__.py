@@ -126,3 +126,16 @@ def get_completer_delims():
     """get_completer_delims() -> string
     get the readline word delimiters for tab-completion"""
     return _ffi_pystr(_lib.rl_completer_word_break_characters)
+
+
+# Exported function to specify a word completer in Python
+
+# Set the completer function
+set_completer = _state.set_completer
+
+
+# Get the completer function
+def get_completer():
+    """get_completer() -> function\n
+    Returns current completer function."""
+    return _state.completer
