@@ -1,4 +1,6 @@
+extern "C" {
 #include "readline_api.h"
+}
 
 #include <string.h>
 #include <stdlib.h>
@@ -13,6 +15,8 @@
 #endif
 #include <readline/readline.h>
 #include <readline/history.h>
+
+int history_length = -1;
 
 class locale_saver {
     char *m_saved_locale;
@@ -51,4 +55,20 @@ int
 read_init_file(const char *s)
 {
     return rl_read_init_file(s);
+}
+
+int
+read_history_file(const char *s)
+{
+    return read_history(s);
+}
+
+int
+write_history_file(const char *s)
+{
+    int err = write_history(s);
+    if (!err && history_length >= 0) {
+        history_truncate_file(s, history_length);
+    }
+    return err;
 }

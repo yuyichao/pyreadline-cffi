@@ -26,6 +26,10 @@ def _to_cstr(s):
     return s
 
 
+def _to_cstr_null(s):
+    return _ffi.NULL if s is None else _to_cstr(s)
+
+
 def _handle_ioerr(err):
     if err != 0:
         raise IOError(err, os.strerror(err))
@@ -57,6 +61,40 @@ def read_init_file(filename=None):
     """read_init_file([filename]) -> None
     Parse a readline initialization file.
     The default filename is the last filename used."""
-    err = _lib.read_init_file(_ffi.NULL if filename is None
-                              else _to_cstr(filename))
+    err = _lib.read_init_file(_to_cstr_null(filename))
     _handle_ioerr(err)
+
+
+# Exported function to load a readline history file
+def read_history_file(filename=None):
+    """read_history_file([filename]) -> None
+    Load a readline history file.
+    The default filename is ~/.history."""
+    err = _lib.read_history_file(_to_cstr_null(filename))
+    _handle_ioerr(err)
+
+
+# Exported function to save a readline history file
+def write_history_file(filename=None):
+    """write_history_file([filename]) -> None
+    Save a readline history file.
+    The default filename is ~/.history."""
+    err = _lib.write_history_file(_to_cstr_null(filename))
+    _handle_ioerr(err)
+
+
+# Set history length
+def set_history_length(length):
+    """set_history_length(length) -> None
+    set the maximal number of items which will be written to
+    the history file. A negative length is used to inhibit
+    history truncation."""
+    _lib.history_length = length
+
+
+# Get history length
+def get_history_length():
+    """get_history_length() -> int
+    return the maximum number of items that will be written to
+    the history file."""
+    return _lib.history_length
