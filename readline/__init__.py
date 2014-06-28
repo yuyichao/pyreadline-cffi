@@ -92,3 +92,13 @@ def set_completer_delims(string):
     """set_completer_delims(string) -> None
     set the readline word delimiters for tab-completion"""
     _lib.set_completer_delims(_to_cstr(string))
+
+
+def remove_history_item(pos):
+    """remove_history_item(pos) -> None
+    remove history item given by its position"""
+    pos = int(pos)
+    if pos < 0:
+        raise ValueError("History index cannot be negative")
+    if not _lib.remove_history_item(pos):
+        raise ValueError("No history item at position %d" % pos)

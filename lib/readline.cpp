@@ -64,3 +64,25 @@ set_completer_delims(const char *s)
     completer_word_break_characters = s;
     rl_completer_word_break_characters = &completer_word_break_characters[0];
 }
+
+/* Readline version >= 5.0 introduced a timestamp field into the history entry
+   structure; this needs to be freed to avoid a memory leak.  This version of
+   readline also introduced the handy 'free_history_entry' function, which
+   takes care of the timestamp. */
+
+PYREADLINE_INLINE static void
+_free_history_entry(HIST_ENTRY *entry)
+{
+    histdata_t data = free_history_entry(entry);
+    free(data);
+}
+
+PYREADLINE_EXPORT int
+remove_history_item(int pos)
+{
+    if (HIST_ENTRY *entry = remove_history(pos)) {
+        _free_history_entry(entry);
+        return 1;
+    }
+    return 0;
+}
