@@ -14,10 +14,10 @@ _lib.py_setup_readline()
 
 
 # Exported function to send one line to readline's init file parser
-def parse_and_bind(s):
+def parse_and_bind(string):
     """parse_and_bind(string) -> None
     Parse and execute single line of a readline init file."""
-    _lib.py_parse_and_bind(_to_cstr(s))
+    _lib.py_parse_and_bind(_to_cstr(string))
 
 
 # Exported function to parse a readline init file

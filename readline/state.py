@@ -1,22 +1,25 @@
 # Copyright (C) 2014~2014 by Yichao Yu
 # yyc1992@gmail.com
 
-from ._cffi import _ffi, _lib, _ffi_pystr, _to_cstr, _to_cstr_null
+"""Readline global state
+"""
+
+from ._cffi import _ffi, _lib, _ffi_pystr, _to_cstr
 
 try:
     range = xrange
-except:
+except NameError:
     pass
 
 
 class _ReadlineState(object):
+    """Readline global state:
+    Hooks, completers, current positions.
+    """
     __slots__ = ('completion_display_matches_hook', 'startup_hook',
                  'pre_input_hook', 'completer', 'begidx', 'endidx')
 
     def __init__(self):
-        self._clear()
-
-    def _clear(self):
         self.completion_display_matches_hook = None
         self.startup_hook = None
         self.pre_input_hook = None

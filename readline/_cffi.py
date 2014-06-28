@@ -1,6 +1,9 @@
 # Copyright (C) 2014~2014 by Yichao Yu
 # yyc1992@gmail.com
 
+"""cffi interface
+"""
+
 from cffi import FFI
 
 import os
@@ -10,9 +13,9 @@ _ffi = FFI()
 
 try:
     # 2to3 friendly
-    _unicode = eval('unicode')
+    _unicode = getattr(__builtins__, 'unicode')
     _ffi_pystr = _ffi.string
-except:
+except (NameError, AttributeError):
     _unicode = str
     _bytes = bytes
 
@@ -21,7 +24,7 @@ except:
 else:
     try:
         _bytes = bytes
-    except:
+    except NameError:
         _bytes = str
 
 _ffi.cdef("""

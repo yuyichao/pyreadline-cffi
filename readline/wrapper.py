@@ -25,9 +25,12 @@
 # CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN
 # CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
+"""Replace builtin readline functions
+"""
+
 import sys
 import os
-from ._cffi import (_ffi, _lib, _to_cstr, _to_cstr_null, _ffi_pystr)
+from ._cffi import _ffi, _lib, _to_cstr, _ffi_pystr
 
 
 class _PyPyWrapper(object):
