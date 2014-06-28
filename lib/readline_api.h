@@ -13,7 +13,6 @@ extern rl_completion_func_t *rl_attempted_completion_function;
 
 int rl_read_init_file(const char*);
 int read_history(const char*);
-void set_py_funcs(void (*)(void*));
 void add_history(const char*);
 void clear_history();
 int rl_insert_text(const char*);

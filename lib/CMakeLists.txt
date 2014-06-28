@@ -1,6 +1,5 @@
 set(pyreadline_SRCS
-  readline.cpp
-  pyhelper.cpp)
+  readline.cpp)
 
 add_library(pyreadline SHARED
   ${pyreadline_SRCS})

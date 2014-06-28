@@ -85,14 +85,3 @@ def _to_cstr_null(s):
 def _handle_ioerr(err):
     if err != 0:
         raise IOError(err, os.strerror(err))
-
-
-# Remove?
-@_ffi.callback('void(void*)')
-def _py_call(handle):
-    try:
-        _ffi.from_handle(handle)()
-    except:
-        pass
-
-_lib.set_py_funcs(_py_call)
