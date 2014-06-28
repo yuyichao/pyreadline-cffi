@@ -28,3 +28,4 @@ int rl_insert_text(const char*);
 void rl_redisplay();
 char *strdup(const char*);
 char **rl_completion_matches(const char*, rl_compentry_func_t*);
+void setup_readline();

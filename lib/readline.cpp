@@ -2,25 +2,6 @@
 
 PYREADLINE_EXPORT int history_length = -1;
 
-class locale_saver {
-    char *m_saved_locale;
-    locale_saver(const locale_saver&) = delete;
-public:
-    PYREADLINE_INLINE
-    locale_saver()
-        : m_saved_locale(strdup(setlocale(LC_CTYPE, NULL)))
-    {
-    }
-    PYREADLINE_INLINE
-    ~locale_saver()
-    {
-        setlocale(LC_CTYPE, m_saved_locale);
-        free(m_saved_locale);
-    }
-};
-
-#define completion_matches rl_completion_matches
-
 PYREADLINE_EXPORT void
 parse_and_bind(const char *s)
 {
@@ -40,6 +21,7 @@ write_history_file(const char *s)
 
 // Do not free the string in rl_completer_word_break_characters since
 // other libraries (e.g. R) might use statically allocated pointer.
+/* All nonalphanums except '.' */
 static std::string completer_word_break_characters =
     " \t\n`~!@#$%^&*()-=+[{]}\\|;:'\",<>/?";
 
@@ -110,4 +92,40 @@ get_history_length()
        be malloc'd but managed by the history package... */
     free(hist_st);
     return length;
+}
+
+class locale_saver {
+    char *m_saved_locale;
+    locale_saver(const locale_saver&) = delete;
+public:
+    PYREADLINE_INLINE
+    locale_saver()
+        : m_saved_locale(strdup(setlocale(LC_CTYPE, NULL)))
+    {
+    }
+    PYREADLINE_INLINE
+    ~locale_saver()
+    {
+        setlocale(LC_CTYPE, m_saved_locale);
+        free(m_saved_locale);
+    }
+};
+
+PYREADLINE_EXPORT void
+setup_readline()
+{
+    locale_saver saver();
+
+    using_history();
+    rl_readline_name = "python";
+    /* Force rebind of TAB to insert-tab */
+    rl_bind_key('\t', rl_insert);
+    /* Bind both ESC-TAB and ESC-ESC to the completion function */
+    rl_bind_key_in_map ('\t', rl_complete, emacs_meta_keymap);
+    rl_bind_key_in_map ('\033', rl_complete, emacs_meta_keymap);
+    /* Set Python word break characters */
+    rl_completer_word_break_characters = &completer_word_break_characters[0];
+
+    /* Initialize (allows .inputrc to override) */
+    rl_initialize();
 }

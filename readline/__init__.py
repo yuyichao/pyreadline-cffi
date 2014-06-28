@@ -8,6 +8,8 @@ Importing this module enables command line editing using GNU readline.
 from ._cffi import _ffi, _lib, _to_cstr, _to_cstr_null, _handle_ioerr
 from .state import state as _state
 
+_lib.setup_readline()
+
 
 # Exported function to send one line to readline's init file parser
 def parse_and_bind(s):
