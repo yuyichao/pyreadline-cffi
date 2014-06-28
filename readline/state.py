@@ -21,8 +21,8 @@ class _ReadlineState(object):
         self.startup_hook = None
         self.pre_input_hook = None
         self.completer = None
-        self.begidx = None
-        self.endidx = None
+        self.begidx = 0
+        self.endidx = 0
 
     def set_completion_display_matches_hook(self, function):
         """set_completion_display_matches_hook([function]) -> None
@@ -54,8 +54,9 @@ class _ReadlineState(object):
     def set_pre_input_hook(self, function):
         """set_pre_input_hook([function]) -> None
         Set or remove the pre_input_hook function.
-        The function is called with no arguments just
-        before readline prints the first prompt."""
+        The function is called with no arguments after the first prompt
+        has been printed and just before readline starts reading input
+        characters."""
         if function is not None and not callable(function):
             raise TypeError("set_pre_input_hook(func): argument not callable")
         self.pre_input_hook = function

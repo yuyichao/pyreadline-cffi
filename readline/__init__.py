@@ -64,3 +64,10 @@ set_completion_display_matches_hook = \
     _state.set_completion_display_matches_hook
 set_startup_hook = _state.set_startup_hook
 set_pre_input_hook = _state.set_pre_input_hook
+
+
+# Get the completion type for the scope of the tab-completion
+def get_completion_type():
+    """get_completion_type() -> int
+    Get the type of completion being attempted."""
+    return _lib.rl_completion_type
