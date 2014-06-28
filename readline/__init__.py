@@ -119,3 +119,10 @@ def add_history(string):
     """add_history(string) -> None
     add a line to the history buffer"""
     _lib.add_history(_to_cstr(string))
+
+
+# Get the tab-completion word-delimiters that readline uses
+def get_completer_delims():
+    """get_completer_delims() -> string
+    get the readline word delimiters for tab-completion"""
+    return _ffi_pystr(_lib.rl_completer_word_break_characters)
