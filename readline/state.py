@@ -1,7 +1,7 @@
 # Copyright (C) 2014~2014 by Yichao Yu
 # yyc1992@gmail.com
 
-from ._cffi import _ffi, _lib, _ffi_pystr
+from ._cffi import _ffi, _lib, _ffi_pystr, _to_cstr, _to_cstr_null
 
 try:
     range = xrange
@@ -106,3 +106,16 @@ def _on_pre_input_hook():
 
 _lib.rl_startup_hook = _on_startup_hook
 _lib.rl_pre_input_hook = _on_pre_input_hook
+
+
+# C function to call the Python completer.
+@_ffi.callback('rl_compentry_func_t')
+def _on_completion(text, state):
+    if state.completer is None:
+        return _ffi.NULL
+    _lib.rl_attempted_completion_over = 1
+    try:
+        r = state.completer(_ffi_pystr(text), state)
+        return _ffi.NULL if r is None else _lib.strdup(_to_cstr(r))
+    except:
+        return _ffi.NULL

@@ -7,6 +7,7 @@ extern rl_hook_func_t *rl_pre_input_hook;
 extern int rl_completion_type;
 extern char *rl_completer_word_break_characters;
 extern char *rl_line_buffer;
+extern int rl_attempted_completion_over;
 
 void parse_and_bind(const char *s);
 int rl_read_init_file(const char*);
@@ -22,3 +23,4 @@ int get_history_length();
 void clear_history();
 int rl_insert_text(const char*);
 void rl_redisplay();
+char *strdup(const char*);
