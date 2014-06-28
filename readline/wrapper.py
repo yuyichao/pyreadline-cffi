@@ -36,6 +36,7 @@ except:
 
 
 class _PyPyWrapper(object):
+    __slots__ = ('f_in', 'f_out')
     def __init__(self):
         self.f_in = _ffi.cast("FILE*", sys.stdin)
         self.f_out = _ffi.cast("FILE*", sys.stdout)
@@ -50,6 +51,19 @@ class _PyPyWrapper(object):
             raise EOFError
         return s
 
+    def _hook(self):
+        sys.__raw_input__ = self.raw_input
+
+
+class _CPythonWrapper(object):
+    def __init__(self):
+        _ffi.cdef('char *(*PyOS_ReadlineFunctionPointer)'
+                  '(FILE*, FILE*, char*);')
+        self.__pylib = _ffi.dlopen(None)
+
+    def _hook(self):
+        self.__pylib.PyOS_ReadlineFunctionPointer = _lib.py_call_readline
+
 
 def _create_wrapper():
     try:
@@ -62,8 +76,8 @@ def _create_wrapper():
 
     if '__pypy__' in sys.builtin_module_names:    # PyPy
         wrapper = _PyPyWrapper()
-        sys.__raw_input__ = wrapper.raw_input
-        return wrapper
     else:
-        # TODO ?
-        return
+        wrapper = _CPythonWrapper()
+
+    wrapper._hook()
+    return wrapper
