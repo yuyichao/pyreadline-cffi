@@ -39,12 +39,15 @@ class _PyPyWrapper(object):
     def __init__(self):
         self.f_in = _ffi.cast("FILE*", sys.stdin)
         self.f_out = _ffi.cast("FILE*", sys.stdout)
+
     def raw_input(self, prompt=''):
         cstr = _lib.py_call_readline(self.f_in, self.f_out, _to_cstr(prompt))
         if cstr == _ffi.NULL:
             raise KeyboardInterrupt
         s = _ffi_pystr(cstr)
         _lib.free(_ffi.cast('void*', cstr))
+        if len(s) == 0:
+            raise EOFError
         return s
 
 
