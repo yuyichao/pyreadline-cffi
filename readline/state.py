@@ -71,13 +71,13 @@ class _ReadlineState(object):
             raise TypeError("set_completer(func): argument not callable")
         self.completer = function
 
-state = _ReadlineState()
+pyrl_state = _ReadlineState()
 
 
 # C function to call the Python completion_display_matches
 @_ffi.callback('rl_compdisp_func_t')
 def _on_completion_display_matches_hook(matches, num_matches, max_length):
-    hook = state.completion_display_matches_hook
+    hook = pyrl_state.completion_display_matches_hook
     if hook is None:
         return
     try:
@@ -92,7 +92,7 @@ def _on_completion_display_matches_hook(matches, num_matches, max_length):
 @_ffi.callback('rl_hook_func_t')
 def _on_startup_hook():
     try:
-        return int(state.startup_hook())
+        return int(pyrl_state.startup_hook())
     except:
         return 0
 
@@ -100,7 +100,7 @@ def _on_startup_hook():
 @_ffi.callback('rl_hook_func_t')
 def _on_pre_input_hook():
     try:
-        return int(state.pre_input_hook())
+        return int(pyrl_state.pre_input_hook())
     except:
         return 0
 
@@ -111,11 +111,11 @@ _lib.rl_pre_input_hook = _on_pre_input_hook
 # C function to call the Python completer.
 @_ffi.callback('rl_compentry_func_t')
 def _on_completion(text, state):
-    if state.completer is None:
+    if pyrl_state.completer is None:
         return _ffi.NULL
     _lib.rl_attempted_completion_over = 1
     try:
-        r = state.completer(_ffi_pystr(text), state)
+        r = pyrl_state.completer(_ffi_pystr(text), state)
         return _ffi.NULL if r is None else _lib.strdup(_to_cstr(r))
     except:
         return _ffi.NULL
@@ -127,8 +127,8 @@ def _on_completion(text, state):
 def _flex_complete(text, start, end):
     _lib.rl_completion_append_character = 0
     _lib.rl_completion_suppress_append = 0
-    state.begidx = start
-    state.endidx = end
+    pyrl_state.begidx = start
+    pyrl_state.endidx = end
     return _lib.rl_completion_matches(text, _on_completion)
 
 _lib.rl_attempted_completion_function = _flex_complete
