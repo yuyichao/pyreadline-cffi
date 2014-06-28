@@ -168,3 +168,10 @@ def clear_history():
     """clear_history() -> None
     Clear the current readline history."""
     _lib.clear_history()
+
+
+# Exported function to insert text into the line buffer
+def insert_text(string):
+    """insert_text(string) -> None
+    Insert text into the command line."""
+    _lib.rl_insert_text(_to_cstr(string))
