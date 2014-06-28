@@ -175,3 +175,11 @@ def insert_text(string):
     """insert_text(string) -> None
     Insert text into the command line."""
     _lib.rl_insert_text(_to_cstr(string))
+
+
+# Redisplay the line buffer
+def redisplay():
+    """redisplay() -> None
+    Change what's displayed on the screen to reflect the current
+    contents of the line buffer."""
+    _lib.rl_redisplay()
