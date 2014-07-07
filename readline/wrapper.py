@@ -33,29 +33,63 @@ import os
 from ._cffi import _ffi, _lib, _to_cstr, _ffi_pystr
 
 
-class _PyPyWrapper(object):
+class _ReadlineWrapper(object):
     __slots__ = ('f_in', 'f_out')
 
     def __init__(self):
         self.f_in = _ffi.cast("FILE*", sys.stdin)
         self.f_out = _ffi.cast("FILE*", sys.stdout)
 
-    def raw_input(self, prompt=''):
+    def _cffi_input(self, prompt):
         cstr = _lib.py_call_readline(self.f_in, self.f_out, _to_cstr(prompt))
         if cstr == _ffi.NULL:
             raise KeyboardInterrupt
+        return _ffi.gc(cstr, _lib.free)
+
+    def raw_input(self, prompt=''):
+        cstr = self._cffi_input(prompt)
         s = _ffi_pystr(cstr)
-        _lib.free(_ffi.cast('void*', cstr))
         if len(s) == 0:
             raise EOFError
         return s
 
+    def multiline_input(self, more_lines, ps1, ps2, returns_unicode=False):
+        """Read an input on possibly multiple lines, asking for more
+        lines as long as 'more_lines(unicodetext)' returns an object whose
+        boolean value is true.
+        """
+        # TODO? steal some code from IPython?
+        prompt = ps1
+        if returns_unicode:
+            res = u''
+            convert = lambda cstr: _ffi.string(cstr).decode()
+        else:
+            res = b''
+            convert = _ffi.string
+        while True:
+            line = convert(self._cffi_input(prompt))
+            if len(line) == 0:
+                if len(res) == 0:
+                    raise EOFError
+                return res
+            res += line[:-1]
+            try:
+                if not more_lines(res):
+                    return res
+            except:
+                return res
+            res += '\n'
+            prompt = ps2
+
+
+class _PyPyWrapper(_ReadlineWrapper):
     def _hook(self):
         sys.__raw_input__ = self.raw_input
 
 
-class _CPythonWrapper(object):
+class _CPythonWrapper(_ReadlineWrapper):
     def __init__(self):
+        _ReadlineWrapper.__init__(self)
         _ffi.cdef('char *(*PyOS_ReadlineFunctionPointer)'
                   '(FILE*, FILE*, char*);')
         self.__pylib = _ffi.dlopen(None)
@@ -65,18 +99,17 @@ class _CPythonWrapper(object):
 
 
 def _create_wrapper():
-    try:
-        f_in = sys.stdin.fileno()
-        f_out = sys.stdout.fileno()
-        if not os.isatty(f_in) or not os.isatty(f_out):
-            return
-    except:
-        return
-
     if '__pypy__' in sys.builtin_module_names:    # PyPy
         wrapper = _PyPyWrapper()
     else:
         wrapper = _CPythonWrapper()
 
-    wrapper._hook()
+    try:
+        f_in = sys.stdin.fileno()
+        f_out = sys.stdout.fileno()
+        if os.isatty(f_in) and os.isatty(f_out):
+            wrapper._hook()
+    except:
+        pass
+
     return wrapper

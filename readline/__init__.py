@@ -189,3 +189,11 @@ def redisplay():
     _lib.rl_redisplay()
 
 _wrapper = _create_wrapper()
+
+multiline_input = _wrapper.multiline_input
+
+# make pyrepl happy...
+def _get_reader():
+    pass
+
+_error = Exception
