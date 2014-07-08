@@ -62,7 +62,12 @@ class _ReadlineWrapper(object):
         prompt = ps1
         if returns_unicode:
             res = u''
-            convert = lambda cstr: _ffi.string(cstr).decode()
+            def convert(cstr):
+                s = _ffi.string(cstr)
+                try:
+                    return s.decode()
+                except UnicodeError:
+                    return s.decode('utf-8', 'replace')
         else:
             res = b''
             convert = _ffi.string
