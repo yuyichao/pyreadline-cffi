@@ -180,6 +180,10 @@ py_call_readline(FILE *sys_stdin, FILE *sys_stdout, const char *prompt)
 {
     locale_saver saver();
 
+    if (!sys_stdin)
+        sys_stdin = stdin;
+    if (!sys_stdout)
+        sys_stdout = stdout;
     if (sys_stdin != rl_instream || sys_stdout != rl_outstream) {
         rl_instream = sys_stdin;
         rl_outstream = sys_stdout;

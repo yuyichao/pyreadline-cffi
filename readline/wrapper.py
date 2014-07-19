@@ -37,8 +37,14 @@ class _ReadlineWrapper(object):
     __slots__ = ('f_in', 'f_out')
 
     def __init__(self):
-        self.f_in = _ffi.cast("FILE*", sys.stdin)
-        self.f_out = _ffi.cast("FILE*", sys.stdout)
+        try:
+            self.f_in = _ffi.cast("FILE*", sys.stdin)
+        except:
+            self.f_in = _ffi.NULL
+        try:
+            self.f_out = _ffi.cast("FILE*", sys.stdout)
+        except:
+            self.f_out = _ffi.NULL
 
     def _cffi_input(self, prompt):
         cstr = _lib.py_call_readline(self.f_in, self.f_out, _to_cstr(prompt))
